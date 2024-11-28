@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: litmus-uns
+  namespace: argocd
+spec:
+  destination:
+    name: ''
+    namespace: uns
+    server: https://kubernetes.default.svc
+  source:
+    path: litmus-uns
+    repoURL: https://github.com/kentchung/testChart.git
+    targetRevision: HEAD
+    helm:
+      valueFiles:
+        - values.yaml
+      parameters:
+        - name: imagePullSecrets[0].name
+          value: litmusautomation-uns-centralportal-pull-secret
+  sources: []
+  project: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
