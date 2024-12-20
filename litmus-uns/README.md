@@ -48,6 +48,37 @@ The command deploys Litmus UNS on the Kubernetes cluster in the default configur
 
 > **Tip**: List all releases using `helm list`
 
+## Deploy with Argo CD
+
+Litmus UNS automatically generates passwords during deployment and stores them in a Kubernetes secret.
+This process is managed by the helm upgrade/install command. If a secret already exists, the existing value is used. Otherwise, a random password is generated and stored in the secret.
+
+However, Argo CD generates manifests using the helm template command and applies them to the cluster.
+This behavior results in random passwords being generated during every sync.
+
+To deploy the chart with Argo CD, please follow the steps below:
+
+* Pull the chart
+```
+helm pull oci://quay.io/litmusautomation/charts/litmus-uns --untar
+```
+
+* Generate and apply the secret before deployment
+
+It is assumed that the chart will be deployed in the namespace `uns` and the release name will be `uns`.
+```
+helm template -n uns uns litmus-uns --show-only templates/creds-secret.yaml | kubectl -n uns apply -f -
+```
+
+* Disable secret creation during deployment
+
+Deploy the chart with the following parameter:
+```
+secrets:
+  create: false
+```
+
+
 ## Configuration and Installation Details
 
 ### SSL Certificate Setup for UNS

@@ -17,7 +17,7 @@ images:
     pullPolicy: IfNotPresent
   postgres:
     name: "postgres"
-    tag: "16.1"
+    tag: "16.4"
     pullPolicy: IfNotPresent
   redis:
     name: "redis"
@@ -33,6 +33,9 @@ images:
     pullPolicy: IfNotPresent
 
 imagePullSecrets: []
+
+secrets:
+  create: true
 
 nameOverride: ""
 fullnameOverride: ""
